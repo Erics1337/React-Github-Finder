@@ -1,4 +1,4 @@
-import React, { Fragment, Component } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import Spinner from '../layout/Spinner';
 import Repos from '../repos/Repos';
 import PropTypes from 'prop-types';
@@ -6,24 +6,14 @@ import { Link } from 'react-router-dom'; // Non-default exports need curley brac
 
 
 // class-based component wont have any state but will use a lifecycle method componentDidMount to fire off getUser() in app.js
-export class User extends Component {
-    componentDidMount () {
-        // .match.params pulls :login from getUser props
-        this.props.getUser(this.props.match.params.login);
-        this.props.getUserRepos(this.props.match.params.login);
+const User = ({ user, loading, getUser, getUserRepos, repos, match}) => {
+    useEffect(() => {
+        getUser(match.params.login);
+        getUserRepos(match.params.login);
+        // eslint-disable-next-line
+    }, []);
+    // To mimic the behavior of componentDidMount, can just put an empty set of brackets at end of useEffect
 
-    }
-
-    static propTypes = {
-        loading: PropTypes.bool,
-        user: PropTypes.object.isRequired,
-        repos: PropTypes.array.isRequired,
-        getUser: PropTypes.func.isRequired,
-        getUserRepos: PropTypes.func.isRequired
-    };
-
-
-    render() {
         const {
             name,
             company,
@@ -38,11 +28,10 @@ export class User extends Component {
             public_repos,
             public_gists,
             hireable
-        } = this.props.user;
+        } = user;
 
-        const { loading, repos } = this.props;
 
-        // if(loading) return <Spinner />
+        if(loading) return <Spinner />
 
         return (
             <Fragment>
@@ -67,7 +56,8 @@ export class User extends Component {
                             <li>
                                 {login && <Fragment>
                                     <strong>Username: </strong> {login}
-                                    </Fragment>}
+                                    </Fragment>
+                                    }
                             </li>
                             <li>
                                 {company && <Fragment>
@@ -92,7 +82,15 @@ export class User extends Component {
                 <Repos repos={repos} />
             </Fragment>
         )
-    }
+    
 }
+
+User.propTypes = {
+    loading: PropTypes.bool,
+    user: PropTypes.object.isRequired,
+    repos: PropTypes.array.isRequired,
+    getUser: PropTypes.func.isRequired,
+    getUserRepos: PropTypes.func.isRequired
+};
 
 export default User;

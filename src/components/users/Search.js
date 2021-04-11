@@ -5,7 +5,6 @@ const Search = ({ searchUsers, showClear, clearUsers, setAlert }) => {
     const[text, setText] = useState('');
 
 
-
     // If not arrow function, would have to include .bind(this) to the onSubmit component form attribute
     const onSubmit = e => {
         e.preventDefault();
@@ -19,15 +18,14 @@ const Search = ({ searchUsers, showClear, clearUsers, setAlert }) => {
 
     
     // Updates component state with the form
-    const onChange = e => this.setText( e.target.value );
+    const onChange = e => setText( e.target.value );
 
-
-  
 
         return (
             <div>
                 <form onSubmit={onSubmit} className="form">
-                    <input type='text' 
+                    <input 
+                        type='text' 
                         name='text' 
                         placeholder="Search Users..." 
                         value={text} 
