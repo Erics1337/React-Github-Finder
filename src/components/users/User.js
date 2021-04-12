@@ -1,18 +1,23 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useContext } from 'react';
 import Spinner from '../layout/Spinner';
 import Repos from '../repos/Repos';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom'; // Non-default exports need curley braces
+import GithubContext from '../../context/github/githubContext';
 
 
 // class-based component wont have any state but will use a lifecycle method componentDidMount to fire off getUser() in app.js
-const User = ({ user, loading, getUser, getUserRepos, repos, match}) => {
+const User = ({ match }) => {
+    const githubContext = useContext(GithubContext);
+
+    const { getUser, loading, user, repos, getUserRepos } = githubContext;
+
     useEffect(() => {
         getUser(match.params.login);
         getUserRepos(match.params.login);
         // eslint-disable-next-line
     }, []);
     // To mimic the behavior of componentDidMount, can just put an empty set of brackets at end of useEffect
+
 
         const {
             name,
@@ -85,12 +90,5 @@ const User = ({ user, loading, getUser, getUserRepos, repos, match}) => {
     
 }
 
-User.propTypes = {
-    loading: PropTypes.bool,
-    user: PropTypes.object.isRequired,
-    repos: PropTypes.array.isRequired,
-    getUser: PropTypes.func.isRequired,
-    getUserRepos: PropTypes.func.isRequired
-};
 
 export default User;
